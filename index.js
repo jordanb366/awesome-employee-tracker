@@ -1,8 +1,10 @@
 // require("dotenv").config();
+// const mysql = require("mysql2/promise");
 const chalk = require("chalk");
-const mysql = require("mysql2/promise");
+const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const consleTable = require("console.table");
+const res = require("express/lib/response");
 // const dbConfig = require("./config/dbConfig");
 
 // async function main() {
@@ -59,17 +61,26 @@ function menuPrompt() {
       //   // Do something
       // } else {
       //   return false;
-      // }
-      console.table([
-        {
-          name: "foo",
-          age: 10,
-        },
-        {
-          name: "bar",
-          age: 20,
-        },
-      ]);
+      // }\
+      // console.table([
+      //   {
+      //     name: "foo",
+      //     age: 10,
+      //   },
+      //   {
+      //     name: "bar",
+      //     age: 20,
+      //   },
+      // ]);
+      db.query("SELECT * FROM department", function (err, results) {
+        console.log(results);
+        console.table([
+          {
+            Id: results[1].id,
+            Role: results[1].name,
+          },
+        ]);
+      });
     });
 }
 
