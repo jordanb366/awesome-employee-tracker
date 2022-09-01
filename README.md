@@ -1,2 +1,9 @@
 # awesome-employee-tracker
-Employee CLI Tracker
+
+Employee Tracker using CLI
+
+## Description
+
+## Screenshot(s)
+
+## Link to Demo of App

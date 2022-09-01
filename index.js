@@ -1,3 +1,14 @@
 require("dotenv").config();
+const chalk = require("chalk");
+const dbConfig = require("./config/dbConfig");
 
-console.log(process.env);
+async function main() {
+  console.info(chalk.blue("=".repeat(30)));
+  console.info(chalk.blue("Connecting to database..."));
+  const dbConnection = await dbConfig();
+  console.info(chalk.blue("Connected to database!"));
+
+  console.log(dbConnection);
+}
+main();
+// console.log(process.env);
