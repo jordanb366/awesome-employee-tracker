@@ -8,7 +8,14 @@
 
 ## Step 3:
 
-1. Set up Inquire with options to choose from
+1. Set up Inquirer with options to choose from
+   -view all departments
+   -view all roles
+   -view all employees
+   -add a department
+   -add a role
+   -add an employee
+   -update an employee role
 
 ## Step 4:
 
