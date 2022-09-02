@@ -51,36 +51,22 @@ function menuPrompt() {
       },
     ])
     .then((data) => {
-      //   Gets the data to...
-      //   Conditionals statements for the prompts menu
-      // if () {
-      //   console.log("Test3");
-      //   // Do something
-      // } else if ("Test2") {
-      //   console.log();
-      //   // Do something
-      // } else {
-      //   return false;
-      // }\
-      // console.table([
-      //   {
-      //     name: "foo",
-      //     age: 10,
-      //   },
-      //   {
-      //     name: "bar",
-      //     age: 20,
-      //   },
-      // ]);
-      db.query("SELECT * FROM department", function (err, results) {
-        console.log(results);
-        console.table([
-          {
-            Id: results[1].id,
-            Role: results[1].name,
-          },
-        ]);
-      });
+      if (data.menu === "View all departments") {
+        db.query("SELECT * FROM department", function (err, results) {
+          console.table(results);
+          menuPrompt();
+        });
+      } else if (data.menu === "View all roles") {
+        db.query("SELECT * FROM role", function (err, results) {
+          console.table(results);
+          menuPrompt();
+        });
+      } else if (data.menu === "View all employees") {
+        db.query("SELECT * FROM employee", function (err, results) {
+          console.table(results);
+          menuPrompt();
+        });
+      }
     });
 }
 
