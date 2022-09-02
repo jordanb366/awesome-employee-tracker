@@ -5,6 +5,7 @@ const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const consleTable = require("console.table");
 const res = require("express/lib/response");
+const { default: prompt } = require("inquirer/lib/ui/prompt");
 // const dbConfig = require("./config/dbConfig");
 
 // async function main() {
@@ -47,26 +48,30 @@ function menuPrompt() {
           "Add a role",
           "Add an employee",
           "Update an employee role",
+          "Quit",
         ],
       },
     ])
     .then((data) => {
       if (data.menu === "View all departments") {
         db.query("SELECT * FROM department", function (err, results) {
-          console.table(results);
+          console.table("Viewing All Departments", results);
           menuPrompt();
         });
       } else if (data.menu === "View all roles") {
         db.query("SELECT * FROM role", function (err, results) {
-          console.table(results);
+          console.table("Viewing All Roles", results);
           menuPrompt();
         });
       } else if (data.menu === "View all employees") {
         db.query("SELECT * FROM employee", function (err, results) {
-          console.table(results);
+          console.table("Viewing All Employees", results);
           menuPrompt();
         });
+      } else {
+        //  Exit app here
       }
+      console.log("Exiting...");
     });
 }
 
