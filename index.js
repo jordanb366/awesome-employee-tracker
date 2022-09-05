@@ -69,10 +69,15 @@ function menuPrompt() {
           }
         );
       } else if (data.menu === "View all employees") {
-        db.query("SELECT * FROM employee", function (err, results) {
-          console.table("Viewing All Employees", results);
-          menuPrompt();
-        });
+        db.query(
+          `SELECT e.id, e.first_name, e.last_name, CONCAT(m.first_name, ' ',m.last_name) AS manager
+        FROM employee e
+        LEFT JOIN employee m ON e.manager_id = m.id`,
+          function (err, results) {
+            console.table("Viewing All Employees", results);
+            menuPrompt();
+          }
+        );
       } else if (data.menu === "Add a department") {
         addDepartment();
       } else if (data.menu === "Add a role") {
@@ -185,3 +190,9 @@ function init() {
   menuPrompt();
 }
 init();
+
+// SELECT e.id, e.first_name, e.last_name, role.title, department.name AS department, role.salary, e.manager_id,
+//         FROM employee e
+//         JOIN role ON employee.role_id = role.id
+//         JOIN department ON role.department_id = department.id
+//         INNER JOIN employee m ON e.manager_id = m.id;
