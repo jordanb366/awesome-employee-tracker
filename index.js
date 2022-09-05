@@ -68,10 +68,101 @@ function menuPrompt() {
           console.table("Viewing All Employees", results);
           menuPrompt();
         });
-      } else {
-        //  Exit app here
+      } else if (data.menu === "Add a department") {
+        addDepartment();
+      } else if (data.menu === "Add a role") {
+        addRole();
+      } else if (data.menu === "Add an employee") {
+        addEmployee();
       }
-      console.log("Exiting...");
+      //  else {
+      //   //  Exit app here
+      // }
+      // console.log("Exiting...");
+    });
+}
+
+function addDepartment() {
+  console.log("A a department...");
+  inquirer
+    .prompt([
+      {
+        type: "number",
+        name: "id",
+        message: "What is the department id?",
+      },
+      {
+        type: "input",
+        name: "name",
+        message: "What is the department name?",
+      },
+    ])
+    .then((data) => {
+      const sql = `INSERT INTO department (id, name)
+      VALUES (?)`;
+
+      const values = [data.id, data.name];
+
+      db.query(sql, [values], function (err, results) {
+        console.log(results);
+        menuPrompt();
+      });
+    });
+}
+
+function addRole() {
+  console.log("A a role..");
+  inquirer
+    .prompt([
+      {
+        type: "number",
+        name: "id",
+        message: "What is the department id?",
+      },
+      {
+        type: "input",
+        name: "name",
+        message: "What is the department name?",
+      },
+    ])
+    .then((data) => {
+      const sql = `INSERT INTO department (id, name)
+      VALUES (?)`;
+
+      const values = [data.id, data.name];
+
+      db.query(sql, [values], function (err, results) {
+        console.log(results);
+        menuPrompt();
+      });
+    });
+}
+
+function addEmployee() {
+  console.log("A a employee..");
+  inquirer
+    .prompt([
+      {
+        type: "number",
+        name: "id",
+        message: "What is the department id?",
+      },
+      {
+        type: "input",
+        name: "name",
+        message: "What is the department name?",
+      },
+    ])
+    .then((data) => {
+      const sql = `INSERT INTO department (id, name)
+      VALUES (?)`;
+
+      const values = [data.id, data.name];
+
+      db.query(sql, [values], function (err, results) {
+        console.log(results);
+        menuPrompt();
+      });
     });
 }
 
