@@ -59,10 +59,15 @@ function menuPrompt() {
           menuPrompt();
         });
       } else if (data.menu === "View all roles") {
-        db.query("SELECT * FROM role", function (err, results) {
-          console.table("Viewing All Roles", results);
-          menuPrompt();
-        });
+        db.query(
+          `SELECT role.id, role.title, department.name AS department, role.salary
+          FROM role
+        JOIN department ON role.department_id = department.id;`,
+          function (err, results) {
+            console.table("Viewing All Roles", results);
+            menuPrompt();
+          }
+        );
       } else if (data.menu === "View all employees") {
         db.query("SELECT * FROM employee", function (err, results) {
           console.table("Viewing All Employees", results);
@@ -74,23 +79,17 @@ function menuPrompt() {
         addRole();
       } else if (data.menu === "Add an employee") {
         addEmployee();
+      } else {
+        //  Exit app here
+        console.log("Exiting...");
       }
-      //  else {
-      //   //  Exit app here
-      // }
-      // console.log("Exiting...");
     });
 }
 
 function addDepartment() {
-  console.log("A a department...");
+  console.log("Add a department...");
   inquirer
     .prompt([
-      {
-        type: "number",
-        name: "id",
-        message: "What is the department id?",
-      },
       {
         type: "input",
         name: "name",
@@ -101,7 +100,7 @@ function addDepartment() {
       const sql = `INSERT INTO department (id, name)
       VALUES (?)`;
 
-      const values = [data.id, data.name];
+      const values = [data.name];
 
       db.query(sql, [values], function (err, results) {
         console.log(results);
@@ -111,25 +110,30 @@ function addDepartment() {
 }
 
 function addRole() {
-  console.log("A a role..");
+  console.log("Add a role...");
   inquirer
     .prompt([
       {
+        type: "input",
+        name: "title",
+        message: "What is the roles title?",
+      },
+      {
         type: "number",
-        name: "id",
-        message: "What is the department id?",
+        name: "salary",
+        message: "What is the roles salary?",
       },
       {
         type: "input",
-        name: "name",
-        message: "What is the department name?",
+        name: "department",
+        message: "What department does the role belong to?",
       },
     ])
     .then((data) => {
-      const sql = `INSERT INTO department (id, name)
+      const sql = `INSERT INTO role (title, salary)
       VALUES (?)`;
 
-      const values = [data.id, data.name];
+      const values = [data.title, data.salary];
 
       db.query(sql, [values], function (err, results) {
         console.log(results);
@@ -139,26 +143,36 @@ function addRole() {
 }
 
 function addEmployee() {
-  console.log("A a employee..");
+  console.log("Add a employee...");
   inquirer
     .prompt([
       {
-        type: "number",
-        name: "id",
-        message: "What is the department id?",
+        type: "input",
+        name: "first_name",
+        message: "What is the employee first name",
       },
       {
         type: "input",
-        name: "name",
-        message: "What is the department name?",
+        name: "last_name",
+        message: "What is the employee last name?",
+      },
+      {
+        type: "input",
+        name: "role",
+        message: "What is the employee's role",
+      },
+      {
+        type: "input",
+        name: "manager",
+        message: "Who is the employee's manager?",
       },
     ])
     .then((data) => {
-      const sql = `INSERT INTO department (id, name)
+      const sql = `INSERT INTO employee (first_name, last_name)
       VALUES (?)`;
 
-      const values = [data.id, data.name];
-
+      const values = [data.first_name, data.last_name];
+      console.log(values);
       db.query(sql, [values], function (err, results) {
         console.log(results);
         menuPrompt();

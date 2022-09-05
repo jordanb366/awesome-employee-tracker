@@ -12,6 +12,6 @@ VALUES (2, "Engineer", 3.3),
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES (2, "Bob", "Jones", 2, 2),
-       (4,"John", "Deere",4, 4),
+       (4,"John", "Deere", 4, 4),
        (3,"Joe", "Jacob", 3, 3),
        (1, "Rob", "Smith", 3, 3);
