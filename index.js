@@ -29,8 +29,21 @@ const db = mysql.createConnection(
     password: "password",
     database: "employee_db",
   },
-  console.log(`Connected to the books_db database.`)
+  console.log(`Connected to the database.`)
 );
+// async function main() {
+// const db = await mysql.createConnection(
+//   {
+//     host: "localhost",
+//     // MySQL username,
+//     user: "root",
+//     // TODO: Add MySQL password
+//     password: "password",
+//     database: "employee_db",
+//   },
+//   console.log(`Connected to the books_db database.`)
+// );
+// }
 
 function menuPrompt() {
   console.log("Employee Manager");
@@ -70,9 +83,11 @@ function menuPrompt() {
         );
       } else if (data.menu === "View all employees") {
         db.query(
-          `SELECT e.id, e.first_name, e.last_name, CONCAT(m.first_name, ' ',m.last_name) AS manager
+          `SELECT e.id, e.first_name, e.last_name, role.title, department.name AS department, role.salary, CONCAT(m.first_name, ' ',m.last_name) AS manager
         FROM employee e
-        LEFT JOIN employee m ON e.manager_id = m.id`,
+        JOIN role ON e.role_id = role.id
+        JOIN department ON role.department_id = department.id
+        LEFT JOIN employee m ON e.manager_id = m.id;`,
           function (err, results) {
             console.table("Viewing All Employees", results);
             menuPrompt();
@@ -116,6 +131,7 @@ function addDepartment() {
 
 function addRole() {
   console.log("Add a role...");
+  db.query("SELECT * FROM department", function (err, results) {});
   inquirer
     .prompt([
       {
@@ -129,9 +145,10 @@ function addRole() {
         message: "What is the roles salary?",
       },
       {
-        type: "input",
+        type: "list",
         name: "department",
-        message: "What department does the role belong to?",
+        message: "What department does the role belong to??",
+        choices: [results],
       },
     ])
     .then((data) => {
