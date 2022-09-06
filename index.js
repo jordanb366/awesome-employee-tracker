@@ -1,11 +1,13 @@
 // require("dotenv").config();
 // const mysql = require("mysql2/promise");
+// const res = require("express/lib/response");
+// const { default: prompt } = require("inquirer/lib/ui/prompt");
+
 const chalk = require("chalk");
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const consleTable = require("console.table");
-const res = require("express/lib/response");
-const { default: prompt } = require("inquirer/lib/ui/prompt");
+
 // const dbConfig = require("./config/dbConfig");
 
 // async function main() {
@@ -99,6 +101,8 @@ function menuPrompt() {
         addRole();
       } else if (data.menu === "Add an employee") {
         addEmployee();
+      } else if (data.menu === "Update an employee role") {
+        updateRole();
       } else {
         //  Exit app here
         console.log("Exiting...");
@@ -148,14 +152,14 @@ function addRole() {
         type: "list",
         name: "department",
         message: "What department does the role belong to??",
-        choices: [results],
+        choices: ["Engineering", "Management", "HR", "IT"],
       },
     ])
     .then((data) => {
       const sql = `INSERT INTO role (title, salary)
       VALUES (?)`;
 
-      const values = [data.title, data.salary];
+      const values = [data.title, data.salary, data.department];
 
       db.query(sql, [values], function (err, results) {
         console.log(results);
@@ -193,9 +197,45 @@ function addEmployee() {
       const sql = `INSERT INTO employee (first_name, last_name)
       VALUES (?)`;
 
-      const values = [data.first_name, data.last_name];
+      const values = [data.first_name, data.last_name, data.role, data.manager];
       console.log(values);
       db.query(sql, [values], function (err, results) {
+        console.log(results);
+        menuPrompt();
+      });
+    });
+}
+
+function updateRole() {
+  console.log("Add a employee...");
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "What is the employee first name",
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "What is the employee last name?",
+      },
+      {
+        type: "number",
+        name: "role",
+        message: "What is the employee's new role",
+      },
+    ])
+    .then((data) => {
+      const sql = `UPDATE employee
+      SET role_id = ?
+      WHERE first_name = ?`;
+
+      const role = [data.role];
+
+      const name = [data.first_name];
+
+      db.query(sql, [role, name], function (err, results) {
         console.log(results);
         menuPrompt();
       });
