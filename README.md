@@ -8,8 +8,9 @@ This an CLI (Command Line Interface) Employee Tracker app. This app allows you t
 
 ## Screenshot(s)
 
-![Screenshot1](google.com)
+![Screenshot1](./Assets/Screenshot1.png)
+![Screenshot2](./Assets/Screenshot2.png)
 
 ## Link to Demo of App
 
-[Demo of APP Link](google.com)
+[Demo of APP Link](https://drive.google.com/file/d/1Ha4uGV28i6ocTMEhBxG84ivhP3i6D8k4/view)

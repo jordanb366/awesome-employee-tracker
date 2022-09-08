@@ -14,12 +14,12 @@ const db = mysql.createConnection(
     password: "password",
     database: "employee_db",
   },
-  console.log(`Connected to the database.`)
+  console.log(chalk.blue(`Connected to the database.`))
 );
 
 // Main menu prompt
 function menuPrompt() {
-  console.log(chalk.green("Employee Manager"));
+  console.log(chalk.green("Welcome to Employee Manager Tracker!!"));
   inquirer
     .prompt([
       {
@@ -114,7 +114,7 @@ function addDepartment() {
       const values = [data.name];
       // Queries the data to the SQL table
       db.query(sql, [values], function (err, results) {
-        console.log(results);
+        console.log("Department added!");
         // Calls menu prompt again
         menuPrompt();
       });
@@ -160,10 +160,10 @@ function addRole() {
           data.salary,
           choiceArr.indexOf(data.department) + 1,
         ];
-        console.log(choiceArr.indexOf(data.department));
+
         // Queries the values stored in variables
         db.query(sql, [values], function (err, results) {
-          console.log(results);
+          console.log("Role added!");
           // Calls menu prompt again
           menuPrompt();
         });
@@ -180,7 +180,7 @@ function addEmployee() {
     for (let i = 0; i < results.length; i++) {
       choiceArr.push(results[i].title);
     }
-    console.log(choiceArr);
+
     inquirer
       .prompt([
         {
@@ -202,7 +202,7 @@ function addEmployee() {
         {
           type: "number",
           name: "manager",
-          message: "Who is the employee's manager?",
+          message: "Who is the employee's manager? Enter their id number",
         },
       ])
       .then((data) => {
@@ -217,11 +217,10 @@ function addEmployee() {
           choiceArr.indexOf(data.role) + 1,
           data.manager,
         ];
-        console.log(choiceArr.indexOf(data.role) + 1);
-        console.log(values);
+
         // Queries to the SQL table
         db.query(sql, [values], function (err, results) {
-          console.log(results);
+          console.log("Employee Added!");
           // Calls prompt again
           menuPrompt();
         });
@@ -271,7 +270,7 @@ function updateRole() {
       const name = [data.first_name];
       // Queries the SQL table and updates based on the values
       db.query(sql, [role, name], function (err, results) {
-        console.log(results);
+        console.log("Updated!");
         // Call menu prompt again
         menuPrompt();
       });
