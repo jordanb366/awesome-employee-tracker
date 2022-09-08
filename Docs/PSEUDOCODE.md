@@ -27,12 +27,8 @@
 
 ## Step 6:
 
-1. Run the functions that will display the information from the database in the terminal, may need to use a class or constructor files organize things more neatly
+1. Run the functions that will display the information from the database in the terminal, and use console.table to render the SQL data tables
 
 ## Step 7:
 
-## Step 8:
-
-## Step 9:
-
-## Step 10:
+1. Query the SQL database tables from terminal and be able to view, add or update an employee role
