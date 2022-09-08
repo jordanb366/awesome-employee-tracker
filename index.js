@@ -1,9 +1,4 @@
-// require("dotenv").config();
-// const mysql = require("mysql2/promise");
-// const res = require("express/lib/response");
-// const { default: prompt } = require("inquirer/lib/ui/prompt");
-
-// Imports for NPM
+// Imports from NPM
 const chalk = require("chalk");
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
@@ -21,23 +16,10 @@ const db = mysql.createConnection(
   },
   console.log(`Connected to the database.`)
 );
-// async function main() {
-// const db = await mysql.createConnection(
-//   {
-//     host: "localhost",
-//     // MySQL username,
-//     user: "root",
-//     // TODO: Add MySQL password
-//     password: "password",
-//     database: "employee_db",
-//   },
-//   console.log(`Connected to the books_db database.`)
-// );
-// }
 
 // Main menu prompt
 function menuPrompt() {
-  console.log("Employee Manager");
+  console.log(chalk.green("Employee Manager"));
   inquirer
     .prompt([
       {
@@ -107,8 +89,8 @@ function menuPrompt() {
         updateRole();
       } else {
         //  Exit app here
-        console.log("Exiting...");
-        return false;
+        // console.log("Exiting...");
+        db.end();
       }
     });
 }
@@ -142,6 +124,7 @@ function addDepartment() {
 // Add role function
 function addRole() {
   const choiceArr = [];
+  const idArr = [];
   console.log("Add a role...");
   db.query("SELECT * FROM department", function (err, results) {
     // "Engineering", "Management", "HR", "IT"
@@ -172,8 +155,12 @@ function addRole() {
         const sql = `INSERT INTO role (title, salary, department_id)
       VALUES (?)`;
         // Values in variable
-        const values = [data.title, data.salary, data.department];
-        console.log(values);
+        const values = [
+          data.title,
+          data.salary,
+          choiceArr.indexOf(data.department) + 1,
+        ];
+        console.log(choiceArr.indexOf(data.department));
         // Queries the values stored in variables
         db.query(sql, [values], function (err, results) {
           console.log(results);
@@ -186,50 +173,72 @@ function addRole() {
 
 // Add employee function
 function addEmployee() {
+  const choiceArr = [];
   console.log("Add a employee...");
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "first_name",
-        message: "What is the employee first name",
-      },
-      {
-        type: "input",
-        name: "last_name",
-        message: "What is the employee last name?",
-      },
-      {
-        type: "input",
-        name: "role",
-        message: "What is the employee's role",
-      },
-      {
-        type: "input",
-        name: "manager",
-        message: "Who is the employee's manager?",
-      },
-    ])
-    .then((data) => {
-      // Insert into employee variable
-      const sql = `INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
+  db.query("SELECT * FROM role", function (err, results) {
+    // "Engineering", "Management", "HR", "IT"
+    for (let i = 0; i < results.length; i++) {
+      choiceArr.push(results[i].title);
+    }
+    console.log(choiceArr);
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "first_name",
+          message: "What is the employee first name",
+        },
+        {
+          type: "input",
+          name: "last_name",
+          message: "What is the employee last name?",
+        },
+        {
+          type: "list",
+          name: "role",
+          message: "What is the employee's role",
+          choices: choiceArr,
+        },
+        {
+          type: "number",
+          name: "manager",
+          message: "Who is the employee's manager?",
+        },
+      ])
+      .then((data) => {
+        // Insert into employee variable
+        const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
       VALUES (?)`;
 
-      // Values variable
-      const values = [data.first_name, data.last_name, data.role, data.manager];
-      console.log(values);
-      // Queries to the SQL table
-      db.query(sql, [values], function (err, results) {
-        console.log(results);
-        // Calls prompt again
-        menuPrompt();
+        // Values variable
+        const values = [
+          data.first_name,
+          data.last_name,
+          choiceArr.indexOf(data.role) + 1,
+          data.manager,
+        ];
+        console.log(choiceArr.indexOf(data.role) + 1);
+        console.log(values);
+        // Queries to the SQL table
+        db.query(sql, [values], function (err, results) {
+          console.log(results);
+          // Calls prompt again
+          menuPrompt();
+        });
       });
-    });
+  });
 }
 
 // Update role function
 function updateRole() {
+  const choiceArr = [];
   console.log("Update an employee...");
+  db.query("SELECT * FROM role", function (err, results) {
+    // "Engineering", "Management", "HR", "IT"
+    for (let i = 0; i < results.length; i++) {
+      choiceArr.push(results[i].title);
+    }
+  });
   inquirer
     .prompt([
       {
@@ -243,9 +252,10 @@ function updateRole() {
         message: "What is the employee last name?",
       },
       {
-        type: "number",
+        type: "list",
         name: "role",
         message: "What is the employee's new role",
+        choices: choiceArr,
       },
     ])
     .then((data) => {
@@ -255,7 +265,7 @@ function updateRole() {
       WHERE first_name = ?`;
 
       // Role variable
-      const role = [data.role];
+      const role = [choiceArr.indexOf(data.role) + 1];
 
       // Name variable
       const name = [data.first_name];
